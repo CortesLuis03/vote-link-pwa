@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { useDeleteCandidate } from "@/hooks/use-candidates";
 import { useToast } from "@/hooks/use-toast";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 export default function ManageCampaign() {
   const [, params] = useRoute("/admin/campaigns/:id");
@@ -52,6 +53,9 @@ export default function ManageCampaign() {
     error: resultsError,
   } = useCampaignResults(campaignId);
   const { theme } = useTheme();
+  usePageTitle(
+    campaign?.title ? `Gestionar: ${campaign.title}` : "Gestionar Campaña",
+  );
 
   if (resultsError)
     console.error("[Frontend] Error loading results:", resultsError);
@@ -268,13 +272,14 @@ export default function ManageCampaign() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-6"
       >
-        <Link href="/admin">
-          <a className="inline-flex items-center gap-2 text-slate-500 hover:text-primary transition-colors font-semibold group">
-            <div className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm group-hover:border-primary/50 transition-all">
-              <ChevronLeft className="w-5 h-5" />
-            </div>
-            Volver al Panel
-          </a>
+        <Link
+          href="/admin"
+          className="inline-flex items-center gap-2 text-slate-500 hover:text-primary transition-colors font-semibold group"
+        >
+          <div className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm group-hover:border-primary/50 transition-all">
+            <ChevronLeft className="w-5 h-5" />
+          </div>
+          Volver al Panel
         </Link>
       </motion.div>
 
@@ -719,7 +724,7 @@ export default function ManageCampaign() {
               <div className="relative group flex-1">
                 <ImageIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                 <input
-                  type="url"
+                  type="text"
                   value={candidateForm.imageUrl}
                   onChange={(e) =>
                     setCandidateForm((prev) => ({

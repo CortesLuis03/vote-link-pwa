@@ -3,8 +3,10 @@ import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
 import { Megaphone, Lock, User, Loader2, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 export default function AdminLogin() {
+  usePageTitle("Iniciar Sesión");
   const { login, user } = useAuth();
   const [, setLocation] = useLocation();
   const [username, setUsername] = useState("");
@@ -31,7 +33,7 @@ export default function AdminLogin() {
       });
 
       const data = await res.json();
-      
+
       if (!res.ok) {
         throw new Error(data.message || "Error al iniciar sesión");
       }
@@ -48,8 +50,8 @@ export default function AdminLogin() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center p-4 transition-colors duration-300">
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-accent/10 blur-[100px] pointer-events-none" />
-      
-      <motion.div 
+
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md relative z-10"
@@ -59,8 +61,12 @@ export default function AdminLogin() {
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20 mb-6">
               <Megaphone className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">VoteAdmin</h1>
-            <p className="text-slate-500 dark:text-slate-400 font-medium italic">Gestión Administrativa</p>
+            <h1 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">
+              LinkVote
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 font-medium italic">
+              Gestión Administrativa
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -72,7 +78,9 @@ export default function AdminLogin() {
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Nombre de Usuario</label>
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
+                Nombre de Usuario
+              </label>
               <div className="relative group">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                 <input
@@ -87,7 +95,9 @@ export default function AdminLogin() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Contraseña</label>
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
+                Contraseña
+              </label>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                 <input
@@ -108,7 +118,8 @@ export default function AdminLogin() {
             >
               {submitting ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" /> Iniciando sesión...
+                  <Loader2 className="w-5 h-5 animate-spin" /> Iniciando
+                  sesión...
                 </>
               ) : (
                 "Acceder al Panel"
@@ -116,7 +127,7 @@ export default function AdminLogin() {
             </button>
           </form>
         </div>
-        
+
         <p className="text-center text-slate-400 dark:text-slate-600 text-sm mt-8">
           Protegido con encriptación de grado militar AES-256
         </p>

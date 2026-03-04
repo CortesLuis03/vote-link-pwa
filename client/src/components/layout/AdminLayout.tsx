@@ -52,7 +52,7 @@ export function AdminLayout({ children, title, action }: AdminLayoutProps) {
             <Megaphone className="w-5 h-5 text-white" />
           </div>
           <span className="font-display font-bold text-xl text-slate-900 dark:text-white">
-            VoteAdmin
+            LinkVote
           </span>
         </div>
 
@@ -134,7 +134,7 @@ export function AdminLayout({ children, title, action }: AdminLayoutProps) {
         <header className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-4 flex items-center gap-3">
           <Megaphone className="w-6 h-6 text-primary" />
           <span className="font-display font-bold text-lg dark:text-white">
-            VoteAdmin
+            LinkVote
           </span>
         </header>
 

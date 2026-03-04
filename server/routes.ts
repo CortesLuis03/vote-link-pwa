@@ -47,27 +47,24 @@ export async function registerRoutes(
   // Serve static files from uploads directory
   app.use('/uploads', express.static(uploadDir));
 
-  // Upload Route with manual error handling to ensure JSON response
-  app.post('/api/upload', authenticateToken, (req, res) => {
-    console.log(`[Server] Upload request received from user: ${(req as any).user?.username}`);
-    upload.single('file')(req, res, (err) => {
-      if (err) {
-        console.error(`[Server] Multer error:`, err);
-        if (err instanceof multer.MulterError) {
-          return res.status(400).json({ message: `Error de subida: ${err.message}` });
-        }
-        return res.status(400).json({ message: err.message });
-      }
+  // Upload Route - Using standard middleware pattern to avoid double response
+  app.post('/api/upload', authenticateToken, upload.single('file'), (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ message: "No se ha subido ningún archivo" });
+    }
+    const fileUrl = `/uploads/${req.file.filename}`;
+    res.json({ url: fileUrl });
+  });
 
-      if (!req.file) {
-        console.warn(`[Server] No file in request`);
-        return res.status(400).json({ message: "No se ha subido ningún archivo" });
-      }
-
-      const fileUrl = `/uploads/${req.file.filename}`;
-      console.log(`[Server] File uploaded successfully: ${fileUrl}`);
-      res.json({ url: fileUrl });
-    });
+  // Specific error handler for upload to ensure JSON response for multer errors
+  app.use('/api/upload', (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ message: `Error de subida: ${err.message}` });
+    }
+    if (err) {
+      return res.status(400).json({ message: err.message });
+    }
+    next();
   });
 
   // Auth Routes

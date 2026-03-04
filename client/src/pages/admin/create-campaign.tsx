@@ -4,6 +4,7 @@ import { useLocation, Link } from "wouter";
 import { useState } from "react";
 import {
   Calendar,
+  Clock,
   Image as ImageIcon,
   Link as LinkIcon,
   AlertCircle,
@@ -11,8 +12,10 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Loader2, Upload } from "lucide-react";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 export default function CreateCampaign() {
+  usePageTitle("Crear Campaña");
   const [, setLocation] = useLocation();
   const { mutate: createCampaign, isPending, error } = useCreateCampaign();
 
@@ -21,8 +24,10 @@ export default function CreateCampaign() {
     description: "",
     imageUrl: "",
     startDate: "",
+    startTime: "00:00",
     endDate: "",
-    uniqueLink: Math.random().toString(36).substring(2, 10), // auto-generate short slug
+    endTime: "23:59",
+    uniqueLink: Math.random().toString(36).substring(2, 10),
   });
   const [uploading, setUploading] = useState(false);
 
@@ -69,9 +74,12 @@ export default function CreateCampaign() {
     e.preventDefault();
     createCampaign(
       {
-        ...formData,
-        startDate: new Date(formData.startDate),
-        endDate: new Date(formData.endDate),
+        title: formData.title,
+        description: formData.description,
+        imageUrl: formData.imageUrl,
+        uniqueLink: formData.uniqueLink,
+        startDate: new Date(`${formData.startDate}T${formData.startTime}`),
+        endDate: new Date(`${formData.endDate}T${formData.endTime}`),
         status: "active",
       },
       {
@@ -95,13 +103,14 @@ export default function CreateCampaign() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-6"
       >
-        <Link href="/admin">
-          <a className="inline-flex items-center gap-2 text-slate-500 hover:text-primary transition-colors font-semibold group">
-            <div className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm group-hover:border-primary/50 transition-all">
-              <ChevronLeft className="w-5 h-5" />
-            </div>
-            Volver al Panel
-          </a>
+        <Link
+          href="/admin"
+          className="inline-flex items-center gap-2 text-slate-500 hover:text-primary transition-colors font-semibold group"
+        >
+          <div className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm group-hover:border-primary/50 transition-all">
+            <ChevronLeft className="w-5 h-5" />
+          </div>
+          Volver al Panel
         </Link>
       </motion.div>
 
@@ -145,33 +154,55 @@ export default function CreateCampaign() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+              <div className="space-y-3">
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
                   Fecha y Hora de Inicio
                 </label>
                 <div className="relative">
                   <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                   <input
                     required
-                    type="datetime-local"
+                    type="date"
                     name="startDate"
                     value={formData.startDate}
                     onChange={handleChange}
                     className="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-slate-900 dark:text-white"
                   />
                 </div>
+                <div className="relative">
+                  <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    required
+                    type="time"
+                    name="startTime"
+                    value={formData.startTime}
+                    onChange={handleChange}
+                    className="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-slate-900 dark:text-white"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+              <div className="space-y-3">
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
                   Fecha y Hora de Finalización
                 </label>
                 <div className="relative">
                   <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                   <input
                     required
-                    type="datetime-local"
+                    type="date"
                     name="endDate"
                     value={formData.endDate}
+                    onChange={handleChange}
+                    className="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-slate-900 dark:text-white"
+                  />
+                </div>
+                <div className="relative">
+                  <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    required
+                    type="time"
+                    name="endTime"
+                    value={formData.endTime}
                     onChange={handleChange}
                     className="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-slate-900 dark:text-white"
                   />
@@ -189,7 +220,7 @@ export default function CreateCampaign() {
                   <div className="relative group flex-1">
                     <ImageIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
-                      type="url"
+                      type="text"
                       name="imageUrl"
                       value={formData.imageUrl}
                       onChange={handleChange}
