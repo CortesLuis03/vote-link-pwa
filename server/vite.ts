@@ -7,8 +7,8 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import { nanoid } from "nanoid";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const _filename = typeof import.meta !== "undefined" && import.meta.url ? fileURLToPath(import.meta.url) : "";
+const _dirname = typeof import.meta !== "undefined" && import.meta.url ? dirname(_filename) : process.cwd();
 
 const viteLogger = createLogger();
 
@@ -40,7 +40,7 @@ export async function setupVite(server: Server, app: Express) {
 
     try {
       const clientTemplate = path.resolve(
-        __dirname,
+        _dirname,
         "..",
         "client",
         "index.html",

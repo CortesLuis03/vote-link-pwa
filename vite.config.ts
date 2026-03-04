@@ -4,8 +4,8 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const _filename = typeof import.meta !== "undefined" && import.meta.url ? fileURLToPath(import.meta.url) : "";
+const _dirname = typeof import.meta !== "undefined" && import.meta.url ? dirname(_filename) : process.cwd();
 
 
 export default defineConfig({
@@ -26,14 +26,14 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "client", "src"),
-      "@shared": path.resolve(__dirname, "shared"),
-      "@assets": path.resolve(__dirname, "attached_assets"),
+      "@": path.resolve(_dirname, "client", "src"),
+      "@shared": path.resolve(_dirname, "shared"),
+      "@assets": path.resolve(_dirname, "attached_assets"),
     },
   },
-  root: path.resolve(__dirname, "client"),
+  root: path.resolve(_dirname, "client"),
   build: {
-    outDir: path.resolve(__dirname, "dist/public"),
+    outDir: path.resolve(_dirname, "dist/public"),
     emptyOutDir: true,
   },
   server: {
